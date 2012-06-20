@@ -14,6 +14,9 @@ autocmd FileType make setlocal noexpandtab
 filetype plugin on
 filetype indent on
 
+
+color desert
+
 map <F12> :!ctags -R --c++-kinds=+p --fields=+iaS --extra=+q --languages=c++ .<CR>
 
 "hehe
