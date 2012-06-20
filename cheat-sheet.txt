@@ -1,0 +1,4 @@
+**关于本资源
+git clone https://github.com/zhangkaixu/linux-cheat-sheet.git
+//以下不知是否只有第一次需要
+git remote add origin https://github.com/zhangkaixu/linux-cheat-sheet.git
