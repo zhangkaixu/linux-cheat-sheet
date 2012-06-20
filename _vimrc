@@ -1,3 +1,6 @@
+syntax on
+set backspace=indent,eol,start
+set nocp
 set ts=4
 set is
 set smarttab
@@ -8,7 +11,6 @@ set number
 set hlsearch
 autocmd FileType make setlocal noexpandtab
 
-set nocp
 filetype plugin on
 filetype indent on
 
@@ -26,3 +28,6 @@ set shellslash
 set grepprg=grep\ -nH\ $*
 let g:tex_flavor='latex'
 set iskeyword+=:
+
+
+
