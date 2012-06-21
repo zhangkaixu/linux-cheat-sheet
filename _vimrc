@@ -1,3 +1,7 @@
+set encoding=utf-8
+set langmenu=zh_CN.UTF-8
+language message zh_CN.UTF-8
+
 syntax on
 set backspace=indent,eol,start
 set nocp
