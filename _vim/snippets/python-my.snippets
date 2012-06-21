@@ -1,0 +1,17 @@
+snippet main
+	if __name__ == '__main__':
+	    ${1:pass}
+
+snippet ic
+	import collections
+
+snippet i
+	import ${1:re}
+
+snippet jdumps
+	json.dumps(${1:v},ensure_ascii=False)
+
+snippet forline
+	for line in open("${1:}"):
+	    ${2:line=line.split()}
+	    ${3:# code...}
