@@ -7,4 +7,7 @@ rm ~/.vim -r -f
 ln -s ${cs_path}/_vim ~/.vim
 rm ~/.vimrc
 ln -s ${cs_path}/_vimrc ~/.vimrc
+
+
+ln -s ${cs_path}/.tmux.conf ~/.tmux.conf
 echo "配置完成"
