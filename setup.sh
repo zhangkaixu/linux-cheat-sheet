@@ -18,4 +18,6 @@ ln -s ${cs_path}/.bash_profile ~/.bash_profile
 
 rm ~/.screenrc -f
 ln -s ${cs_path}/.screenrc ~/.screenrc
+rm ~/.zshrc -f
+ln -s ${cs_path}/.zshrc ~/.zshrc
 echo "配置完成"
