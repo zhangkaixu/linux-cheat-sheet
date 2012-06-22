@@ -14,4 +14,8 @@ ln -s ${cs_path}/.tmux.conf ~/.tmux.conf
 
 rm ~/.bash_profile -f
 ln -s ${cs_path}/.bash_profile ~/.bash_profile
+
+
+rm ~/.screenrc -f
+ln -s ${cs_path}/.screenrc ~/.screenrc
 echo "配置完成"
