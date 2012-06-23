@@ -228,6 +228,7 @@ alias -g ls='ls -F --color=auto'
 alias -g ll='ls -l'
 alias -g grep='grep --color=auto'
 alias -g ee='emacsclient -t'
+alias -g ta='tmux attach'
 
 #[Esc][h] man 当前命令时，显示简短说明 
 alias run-help >&/dev/null && unalias run-help
