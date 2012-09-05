@@ -1,4 +1,7 @@
 let g:netrw_dirhistmax  =10
-let g:netrw_dirhist_cnt =2
+let g:netrw_dirhist_cnt =5
 let g:netrw_dirhist_1='/media/exp/hypergraph'
 let g:netrw_dirhist_2='/cygdrive/d/Dropbox/notes'
+let g:netrw_dirhist_3='/home/zkx/weibo_cws/thulac'
+let g:netrw_dirhist_4='/home/zkx/isan/isan/tagging'
+let g:netrw_dirhist_5='/home/zkx/.vim'

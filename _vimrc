@@ -38,3 +38,12 @@ set iskeyword+=:
 
 
 
+map <F9> :w <CR>
+imap <F9> <ESC> :w<CR>
+map <F10> :call Save_And_Make()<CR>
+imap <F10> <ESC> :call Save_And_Make()<CR>
+
+func! Save_And_Make()
+    exec "w"
+    exec "make"
+endfunction
