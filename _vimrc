@@ -20,6 +20,9 @@ filetype indent on
 
 
 color torte
+hi Normal ctermbg=NONE
+
+
 
 map <F12> :!ctags -R --c++-kinds=+p --fields=+iaS --extra=+q --languages=c++ .<CR>
 
