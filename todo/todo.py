@@ -24,6 +24,8 @@ class Record :
     def date_color(self):
         if self.finishdate :
             return Color.BLUE
+        if not self.duedate :
+            return Color.PURPLE
         today=datetime.date.today()
         deltaday=(self.duedate-today).days
         if deltaday<0 : return Color.RED
@@ -119,8 +121,10 @@ class Todo :
             print(item)
     def do(self,argv):
         line=' '.join(argv)
+        record=Record(0,line)
+
         file=open(self.filename,'a')
-        print(line,file=file)
+        print(record.dumps(),file=file)
         file.close()
     def delete(self,argv):
         delln=int(argv[0])
@@ -153,6 +157,16 @@ class Todo :
         data=self.load()
         data[ind].finishdate=None
         self.save(data)
+    def archive(self,argv):
+        data=self.load()
+        rest=[d for d in data if d.finishdate is None]
+        data=[d for d in data if d.finishdate is not None]
+        self.save(rest)
+        file=open(self.filename+'.archive',"a")
+        for d in data :
+            print(d.dumps(),file=file)
+
+
 
     def __init__(self,filename=os.path.join(sys.path[0],'todo.txt')):
         self.functions={
@@ -163,6 +177,7 @@ class Todo :
                 'update': self.update,
                 'add': self.do,
                 'del': self.delete,
+                'archive': self.archive,
                 }
         self.filename=filename
     
