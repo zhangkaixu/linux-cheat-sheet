@@ -6,6 +6,16 @@ import os
 import datetime
 
 
+import json
+
+home=os.environ['HOME']
+rc=os.path.join(os.environ['HOME'],'.todoconfig')
+conf=json.load(open(rc))
+todotxt=conf['todo.txt'].replace('~',home)
+todoarchive=(conf['todo.txt.archive']).replace('~',home)
+
+print(todotxt)
+
 class Color:
     RED=31
     GREEN=32
@@ -168,7 +178,7 @@ class Todo :
 
 
 
-    def __init__(self,filename=os.path.join(sys.path[0],'todo.txt')):
+    def __init__(self,filename=os.path.join(sys.path[0],todotxt)):
         self.functions={
                 'ls': self.ls,
                 'do': self.do,
