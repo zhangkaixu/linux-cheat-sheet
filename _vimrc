@@ -13,6 +13,7 @@ set autoindent
 set expandtab
 set number
 set hlsearch
+set showtabline=2
 autocmd FileType make setlocal noexpandtab
 
 filetype plugin on

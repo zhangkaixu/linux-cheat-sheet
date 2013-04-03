@@ -7,6 +7,10 @@ snippet readfile
 			v.insert(v.end(), buf, buf + len);
 		fclose($2);
 	}${3}
+
+snippet cout
+	std::cout<<${1}<<"\n";
+
 # std::map
 snippet map
 	std::map<${1:key}, ${2:value}> map${3};
