@@ -288,6 +288,8 @@ bindkey "^[[11~" arith-eval-echo
 ####{{{
 function timeconv { date -d @$1 +"%Y-%m-%d %T" }
 
+function mkexe { touch $1; chmod +x $1 }
+
 # }}}
 
 
