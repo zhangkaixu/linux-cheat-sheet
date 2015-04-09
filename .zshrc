@@ -3,7 +3,6 @@ LANG=en_US.utf8
 # this is for working in baidu
 
 if [ -d "/home/tools/tools" ]; then
-	PATH=~/.jumbo/bin/:/home/tools/tools/svn/1.6.5/64/bin:/home/tools/tools/scmtools/usr/bin:/home/tools/tools/../bin/64/:/home/tools/tools/maven/apache-maven-2.2.0/bin:/home/tools/tools/ant/apache-ant-1.6.5/bin:/home/tools/tools/ant/apache-ant-1.7.1/bin:/home/tools/tools/php/5.2.17/64/bin:$PATH
 	MANPATH=:/usr/share/baidu/man:/tools/baidu_manpage/man
 	JAVA_HOME_1_5=/home/tools/tools/java/jdk1.5.0_07
 	JAVA_HOME_1_6=/home/tools/tools/java/jdk1.6.0_20
@@ -14,7 +13,6 @@ if [ -d "/home/tools/tools" ]; then
 	MAC=64
 	export JAVA_HOME_1_5 ANT_HOME JAVA_HOME_1_6 ANT_HOME_1_7 MAVEN_2_2_1 MAVEN_3_0_4 PATH MANPATH MAC
 fi
-export JUMBO_ROOT="/home/users/zhangkaixu/.jumbo"
 #color{{{
 autoload colors 
 colors
@@ -238,7 +236,6 @@ bindkey "\e\e" sudo-command-line
 #}}}
   
 #命令别名 {{{
-alias -g valgrind='~/.jumbo/bin/valgrind'
 alias -g cp='cp -i'
 alias -g mv='mv -i'
 alias -g rm='rm -i'
@@ -249,7 +246,6 @@ alias -g ee='emacsclient -t'
 alias -g ta='tmux attach'
 
 alias todo='~/system/linux-cheat-sheet/todo/todo.py'
-alias -g vim='~/.jumbo/bin/vim'
 
 alias -g parallel='parallel -gnu'
 
