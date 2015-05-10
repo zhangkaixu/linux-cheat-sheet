@@ -24,6 +24,8 @@ color torte
 hi Normal ctermbg=NONE
 
 
+set statusline=%F\ [%{&fenc}\ %{&ff}\ L%l/%L\ C%c]\ %=%{strftime('%Y-%m-%d\ %H:%M')}
+set laststatus=2
 
 map <F12> :!ctags -R --c++-kinds=+p --fields=+iaS --extra=+q --languages=c++ .<CR>
 
@@ -41,6 +43,14 @@ map <F9> :call Save_And_Make()<CR>
 imap <F9> <ESC> :call Save_And_Make()<CR>
 map <F10> :call Save_And_MakeB()<CR>
 imap <F10> <ESC> :call Save_And_MakeB()<CR>
+
+"tab
+map <space> gt
+map <backspace> gT
+map <leader><space> <c-w>w
+
+" quick higglight
+map <leader>h *<c-o>
 
 func! Save_And_Make()
     exec "w"

@@ -238,7 +238,6 @@ bindkey "\e\e" sudo-command-line
 #}}}
   
 #命令别名 {{{
-alias -g valgrind='~/.jumbo/bin/valgrind'
 alias -g cp='cp -i'
 alias -g mv='mv -i'
 alias -g rm='rm -i'
@@ -249,7 +248,6 @@ alias -g ee='emacsclient -t'
 alias -g ta='tmux attach'
 
 alias todo='~/system/linux-cheat-sheet/todo/todo.py'
-alias -g vim='~/.jumbo/bin/vim'
 
 alias -g parallel='parallel -gnu'
 
