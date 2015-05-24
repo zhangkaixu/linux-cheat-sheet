@@ -27,6 +27,11 @@ hi Normal ctermbg=NONE
 set statusline=%F\ [%{&fenc}\ %{&ff}\ L%l/%L\ C%c]\ %=%{strftime('%Y-%m-%d\ %H:%M')}
 set laststatus=2
 
+
+"doxygen
+let g:doxygenToolkit_author="Zhang Kaixu"
+let g:load_doxygen_syntax=1
+
 map <F12> :!ctags -R --c++-kinds=+p --fields=+iaS --extra=+q --languages=c++ .<CR>
 
 "hehe
@@ -48,6 +53,9 @@ imap <F10> <ESC> :call Save_And_MakeB()<CR>
 map <space> gt
 map <backspace> gT
 map <leader><space> <c-w>w
+
+map <leader>s :w<CR>
+imap jj <ESC>
 
 " quick higglight
 map <leader>h *<c-o>

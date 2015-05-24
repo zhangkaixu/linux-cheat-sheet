@@ -1,6 +1,7 @@
 LANG=en_US.utf8
 
 # this is for working in baidu
+#
 
 if [ -d "/home/tools/tools" ]; then
 	PATH=~/.jumbo/bin/:/home/tools/tools/svn/1.6.5/64/bin:/home/tools/tools/scmtools/usr/bin:/home/tools/tools/../bin/64/:/home/tools/tools/maven/apache-maven-2.2.0/bin:/home/tools/tools/ant/apache-ant-1.6.5/bin:/home/tools/tools/ant/apache-ant-1.7.1/bin:/home/tools/tools/php/5.2.17/64/bin:$PATH
