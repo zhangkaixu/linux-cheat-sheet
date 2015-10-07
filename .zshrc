@@ -1,4 +1,7 @@
-LANG=en_US.utf8
+export LANG="en_US.utf8"
+export LANGUAGE="en_US.utf8"
+#export LC_ALL=C
+export LESSCHARSET=utf-8
 
 # this is for working in baidu
 #
