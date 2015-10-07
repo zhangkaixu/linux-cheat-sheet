@@ -1,0 +1,6 @@
+##TRIE树与AC自动机
+一个用C++11实现的空间、速度上都比较不错的版本。
+
+可以用`trie_build` `ac_build`两个程序创建。
+
+`trie_match` `ac_search` 这两个程序提供了简单的测试。
