@@ -12,7 +12,8 @@ class Mapper :
         src = args['src']
         tgt = args['des']
         print(src, file = sys.stderr)
-        cmd = 'cat %s | %s > %s'%(src, self._cmd, tgt)
+        cmd = '%s | %s > %s'%(args['cat']%(src), self._cmd, tgt)
+        print(cmd)
         os.system(cmd)
 
 if __name__ == '__main__':
@@ -20,6 +21,7 @@ if __name__ == '__main__':
     parser.add_argument('mapper', type=str, help='mapper') 
     parser.add_argument('src', type=str, help='源目录') 
     parser.add_argument('des', type=str, help='目标目录') 
+    parser.add_argument('--cat', type=str, default='cat %s', help='') 
     parser.add_argument('-p', type=int, default=1, help='进程个数') 
     args = parser.parse_args()
 
@@ -33,7 +35,9 @@ if __name__ == '__main__':
 
         files = sorted(os.listdir(dirname))
         files = [{'src' :os.path.join(dirname, f), 
-            'des' :os.path.join(tgtdir, f)} for f in files]
+            'des' :os.path.join(tgtdir, f),
+            'cat' : args.cat,
+            } for f in files]
         pool = multiprocessing.Pool(args.p)
         pool.map(Mapper(mapper), files)
 

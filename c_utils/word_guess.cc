@@ -14,6 +14,7 @@
 using namespace std;
 
 class CandFinder {
+    typedef unsigned long long bigram_t;
     set<unsigned int> _dels;
     set<unsigned int> _non_word_chars;
 
@@ -51,7 +52,7 @@ public:
         }
 
         /// count
-        set<unsigned long> context;
+        set<bigram_t> context;
         set<unsigned int> left_set;
         set<unsigned int> right_set;
 
@@ -92,7 +93,7 @@ public:
                 }
             }
 
-            unsigned long key = (((unsigned long)left) << 32) | right;
+            bigram_t key = (((bigram_t)left) << 32) | right;
             if (context.find(key) == context.end()) {
                 context_ok = true;
                 context.insert(key);
@@ -140,12 +141,12 @@ public:
             string& line,
             vector<unsigned int>& tokens,
             vector<size_t>& offs) {
-        multimap<unsigned long, size_t> bigrams;
+        multimap<bigram_t, size_t> bigrams;
 
         /// 1 get bigrams
         for (size_t i = 0; i < tokens.size() - 1; i++) {
-            bigrams.insert(pair<unsigned long, size_t>(
-                        *((unsigned long*)&tokens[i]),
+            bigrams.insert(pair<bigram_t, size_t>(
+                        *((bigram_t*)&tokens[i]),
                         i));
         }
 
