@@ -1,7 +1,10 @@
-all : word_guess count
+all_cc=$(shell ls *.cc)
+all_exe=$(all_cc:.cc=)
 
-word_guess : word_guess.cc utf8.h
+all : $(all_exe)
+
+% : %.cc *.h
 	$(CXX) --std=c++11 $< -o $@ -O3
 
-count : count.cc counter.h
-	$(CXX) --std=c++11 $< -o $@ -O3
+
+
