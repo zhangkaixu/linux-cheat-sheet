@@ -1,2 +1,7 @@
+all : word_guess count
+
 word_guess : word_guess.cc utf8.h
+	$(CXX) --std=c++11 $< -o $@ -O3
+
+count : count.cc counter.h
 	$(CXX) --std=c++11 $< -o $@ -O3
