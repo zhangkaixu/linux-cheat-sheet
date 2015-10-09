@@ -3,6 +3,7 @@
 #include <string>
 #include <memory>
 #include <queue>
+#include <stack>
 /**
  * interface
  * */
@@ -23,8 +24,13 @@ public:
 
     void AddLine(const std::string& line) {
         size_t table_pos = line.find('\t');
-        keys_.push_back(line.substr(0, table_pos));
-        values_.push_back(atoi(line.c_str() + table_pos + 1));
+        if (table_pos != std::string::npos) {
+            keys_.push_back(line.substr(0, table_pos));
+            values_.push_back(atoi(line.c_str() + table_pos + 1));
+        } else {
+            keys_.push_back(line);
+            values_.push_back(line.size());
+        }
     }
 
     bool Check() const {
@@ -145,8 +151,27 @@ protected:
 };
 
 
+class ACNode : public TrieNode {
+public:
+    ACNode() {
+        fail_ = 0;
+    }
+    void set_fail(unsigned int fail) {
+        fail_ = fail;
+    }
+    unsigned int fail() {
+        return fail_;
+    }
+protected:
+    unsigned int fail_;
+};
+
+
+
 void load_binary_file(const char* filename, char*& ptr, size_t& size) {
 }
+
+
 
 template <class Node>
 class TrieAutomata {
@@ -158,6 +183,34 @@ public:
     TrieAutomata(const char* filename) {
 
     }
+    unsigned int search_next(const unsigned int index, 
+            const unsigned char label) {
+        auto cur = index;
+        while (true) {
+            auto next = cur ^ array_[cur].offset() ^ label;
+            if (array_[next].label() == label) {
+                return next;
+            }
+            if (cur == ROOT_INDEX) return ROOT_INDEX;
+            cur = array_[cur].fail();
+        }
+    }
+
+    void get_matches(const unsigned int index, std::vector<int>& matches) {
+        matches.clear();
+        auto cur = index;
+        //printf("get ");
+        while (true) {
+            //printf("%u ", cur);
+            if (cur == ROOT_INDEX) return;
+            if (array_[cur].has_leaf()) {
+                matches.push_back(
+                        array_[cur ^ array_[cur].offset()].value());
+            }
+            cur = array_[cur].fail();
+        }
+    }
+    
     int match(const char* key) const{
         unsigned int node_pos = 0;
         while (*key) {
@@ -323,7 +376,11 @@ public:
         trie_ = std::make_shared<std::vector<Node>>();
         trie_->push_back(Node());
     }
+
     std::shared_ptr<std::vector<Node>> Build(TextDict& text_dict);
+    std::shared_ptr<std::vector<Node>> nodes();
+    void CalcFail(unsigned int this_node, 
+        unsigned int parents_fail, unsigned char label); 
 
 private:
     Node& node(unsigned int index) {
@@ -354,6 +411,19 @@ private:
         trie_ = new_trie;
     }
 
+    unsigned int ACRead(unsigned int index, unsigned char label) {
+        while (true) {
+            auto ch = index ^ node(index).offset() ^ label;
+            if (node(ch).label() == label) {
+                return ch;
+            }
+            if (index == ROOT_INDEX) {
+                return ROOT_INDEX;
+            }
+            index = node(index).fail();
+        }
+    }
+
 private:
     /// use for depth-first and width-first search
     struct SearchState {
@@ -371,6 +441,7 @@ private:
 };
 
 
+
 template <class Node>
 std::shared_ptr<std::vector<Node>> TrieBuilder<Node>::Build(TextDict& text_dict) {
     std::vector<size_t> begins;
@@ -385,7 +456,7 @@ std::shared_ptr<std::vector<Node>> TrieBuilder<Node>::Build(TextDict& text_dict)
                 ));
 
     
-    /// 用队列实现深度优先搜索
+    /// 用队列实现搜索
     while (queue.size()) {
         /// 得到队列第一个元素
         auto state = queue.front();
@@ -410,6 +481,9 @@ std::shared_ptr<std::vector<Node>> TrieBuilder<Node>::Build(TextDict& text_dict)
                 continue;
             }
             node(offset ^ keys[i]).set_label(keys[i]);
+
+            CalcFail(offset ^ keys[i], state->node_pos, keys[i]);
+
             queue.push(std::make_shared<SearchState>(
                         begins[i], ends[i], state->depth + 1,
                         offset ^ keys[i]
@@ -418,6 +492,22 @@ std::shared_ptr<std::vector<Node>> TrieBuilder<Node>::Build(TextDict& text_dict)
     }
     Shrink();
     return trie_;
+}
+
+template <>
+void TrieBuilder<TrieNode>::CalcFail(unsigned int this_node, 
+        unsigned int parent, unsigned char label) {
+}
+template <>
+void TrieBuilder<ACNode>::CalcFail(unsigned int this_node, 
+        unsigned int parent, unsigned char label) {
+    if (parent == ROOT_INDEX) {
+        node(this_node).set_fail(ROOT_INDEX);
+        return;
+    }
+    auto fail = ACRead(node(parent).fail(), label);
+    //printf("%u(par: %u)'s fail is %u for label %lu\n", this_node, parent, fail, label);
+    node(this_node).set_fail(fail);
 }
 
 }

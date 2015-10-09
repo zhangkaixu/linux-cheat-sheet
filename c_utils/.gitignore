@@ -2,3 +2,6 @@ word_guess
 count
 trie_build
 trie_match
+ac_build
+ac_search
+test*
