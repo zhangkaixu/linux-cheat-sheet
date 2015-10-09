@@ -8,8 +8,12 @@ using namespace std;
 using namespace trie_automata;
 
 int main(int argc, const char** argv) {
+    if (argc == 1) {
+        printf("usage: %s ac.bin < input > output\n", argv[0]);
+        return 0;
+    }
     vector<ACNode> trie;
-    load_trie(trie, fopen("test.trie", "rb"));
+    load_trie(trie, fopen(argv[1], "rb"));
 
     TrieAutomata<ACNode> ta(trie);
 

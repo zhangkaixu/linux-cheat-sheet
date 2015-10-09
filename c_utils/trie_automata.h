@@ -154,7 +154,7 @@ protected:
 class ACNode : public TrieNode {
 public:
     ACNode() {
-        fail_ = 0;
+        fail_ = ROOT_INDEX;
     }
     void set_fail(unsigned int fail) {
         fail_ = fail;
@@ -184,7 +184,7 @@ public:
 
     }
     unsigned int search_next(const unsigned int index, 
-            const unsigned char label) {
+            const unsigned char label) const {
         auto cur = index;
         while (true) {
             auto next = cur ^ array_[cur].offset() ^ label;
@@ -196,12 +196,12 @@ public:
         }
     }
 
-    void get_matches(const unsigned int index, std::vector<int>& matches) {
+    void get_matches(const unsigned int index, 
+            std::vector<int>& matches) const {
+
         matches.clear();
         auto cur = index;
-        //printf("get ");
         while (true) {
-            //printf("%u ", cur);
             if (cur == ROOT_INDEX) return;
             if (array_[cur].has_leaf()) {
                 matches.push_back(

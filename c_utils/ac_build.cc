@@ -5,7 +5,17 @@
 using namespace std;
 using namespace trie_automata;
 
+/**
+ * ##ac_build
+ * 用于创建AC自动机
+ * */
+
 int main(int argc, const char** argv) {
+    if (argc == 1) {
+        printf("build AC-Automata using a dict file\n");
+        printf("usage: %s ac.bin < ordered_dict_file\n", argv[0]);
+        return 0;
+    }
     TextDict text_dict;
     /// read text dict
     for (string line; getline(cin, line); ) {
