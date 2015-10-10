@@ -182,6 +182,9 @@ int main(int argc, const char *argv[])
     size_t n = 0;
     for (string line; getline(cin, line); ) {
         utf8::align_to_uint(line, tokens, offs); 
+        if (tokens.size() > 1000) {
+            tokens.resize(1000);
+        }
         //cout<<line<<"\n";
         finder.find_repetition(line, tokens, offs);
         n++;
