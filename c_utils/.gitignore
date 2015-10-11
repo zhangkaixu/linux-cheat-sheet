@@ -4,4 +4,6 @@ trie_build
 trie_match
 ac_build
 ac_search
+
+find_overlapping
 test*
