@@ -3,20 +3,38 @@ import sys
 import os
 import random
 
+
+class FileBuffer:
+    def __init__(self, f):
+        self.f = f
+        self.buf = []
+    def __call__(self, l):
+        self.buf.append(l)
+        if len(self.buf) == 10000 :
+            for b in self.buf :
+                print(b, file = self.f)
+            self.buf = []
+            
+    def __del__(self):
+        for b in self.buf :
+            print(b, file = self.f)
+
 if __name__ == '__main__':
     tgt = sys.argv[1]
     n = 100
     os.system('mkdir %s -p' % tgt)
 
-    keys = {}
     files = [open(os.path.join(tgt, "%d" % i), 'w') for i in range(n)]
+    files = [FileBuffer(f) for f in files]
 
-    for line in sys.stdin :
-        line = line.rstrip().split()
-        if len(line) != 2 : continue
-        k, v = line
-        if k not in keys :
-            i = random.randint(0, n - 1)
-            keys[k] = files[i]
-        print(k, v, sep = '\t', file = keys[k])
+    for i, line in enumerate(sys.stdin) :
+        if i % 10000 == 0:
+            print(i / 10000, file =sys.stdout, end = '\r')
+        line = line.rstrip()#.split()
+        #if len(line) != 2 : continue
+        #k, v = line
+        k = line.partition('\t')[0]
+        i = hash(k) % n
+        files[i](line)
+        #print(k, v, sep = '\t', file = files[i])
 

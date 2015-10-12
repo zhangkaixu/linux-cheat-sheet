@@ -4,6 +4,7 @@ trie_build
 trie_match
 ac_build
 ac_search
+hash_dispatch
 
 find_overlapping
 test*
