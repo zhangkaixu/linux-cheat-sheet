@@ -4,6 +4,7 @@
 #include <memory>
 #include <queue>
 #include <stack>
+#include <functional>
 /**
  * interface
  * */
@@ -424,6 +425,37 @@ private:
         }
     }
 
+    unsigned int trie_get_offset(unsigned int node_pos, std::vector<unsigned char>& keys) {
+        unsigned int offset = free_link_.FindValid(node_pos, keys);
+        node(node_pos).set_offset(node_pos ^ offset);
+        return offset;
+    }
+    bool trie_get_child(unsigned int node_pos, unsigned int offset,
+        unsigned char label, size_t begin, 
+        TextDict& text_dict) {
+
+        if (label == '\0') {
+            node(node_pos).set_has_leaf();
+            node(offset ^ label).set_value(text_dict.value(begin));
+            return false;
+        }
+        node(offset ^ label).set_label(label);
+        return true;
+    }
+
+    unsigned int ac_get_offset(unsigned int node_pos, std::vector<unsigned char>& keys) {
+        unsigned int offset = node(node_pos).offset() ^ node_pos;
+        return offset;
+    }
+    bool ac_get_child(unsigned int node_pos, unsigned int offset,
+        unsigned char label, size_t begin, TextDict& text_dict) {
+        if (label == '\0') {
+            return false;
+        }
+        CalcFail(offset ^ label, node_pos, label);
+        return true;
+    }
+
 private:
     /// use for depth-first and width-first search
     struct SearchState {
@@ -438,17 +470,27 @@ private:
 
     std::shared_ptr<std::vector<Node>> trie_;
     FreeLink free_link_;
+
+    template <class Buffer = std::stack<std::shared_ptr<SearchState>>>
+    void DFS(TextDict& text_dict,
+       std::function<unsigned int(unsigned int, std::vector<unsigned char>&)> get_offset,
+       std::function<bool(unsigned int, unsigned int, unsigned char, size_t, TextDict&)> get_child
+            );
 };
 
 
-
 template <class Node>
-std::shared_ptr<std::vector<Node>> TrieBuilder<Node>::Build(TextDict& text_dict) {
+template <class Buffer>
+void TrieBuilder<Node>::DFS(TextDict& text_dict,
+       std::function<unsigned int(unsigned int, std::vector<unsigned char>&)> get_offset,
+       std::function<bool(unsigned int, unsigned int, unsigned char, size_t, TextDict&)> get_child
+        ) {
     std::vector<size_t> begins;
     std::vector<size_t> ends;
     std::vector<unsigned char> keys;
 
-    std::queue<std::shared_ptr<SearchState>> queue;
+    //std::queue<std::shared_ptr<SearchState>> queue;
+    std::stack<std::shared_ptr<SearchState>> queue;
     std::vector<bool> node_used;
 
     queue.push(std::make_shared<SearchState>(
@@ -457,9 +499,11 @@ std::shared_ptr<std::vector<Node>> TrieBuilder<Node>::Build(TextDict& text_dict)
 
     
     /// 用队列实现搜索
+    size_t step = 0;
     while (queue.size()) {
         /// 得到队列第一个元素
-        auto state = queue.front();
+        //auto state = queue.front();
+        auto state = queue.top();
         queue.pop();
 
         /// 得到当前节点的所有儿子
@@ -467,6 +511,72 @@ std::shared_ptr<std::vector<Node>> TrieBuilder<Node>::Build(TextDict& text_dict)
                 state->begin, 
                 state->end, state->depth,
                 begins, ends, keys);
+
+        if ((step++) % 100000 == 0) {
+            printf("%lu\t%lu\t\n", state->depth, state->begin);
+        }
+
+        /// 分配TRIE树空间，填充内容
+        unsigned int offset = get_offset(state->node_pos, keys);
+
+        /// 将非叶子节点的每个孩子也放入队列
+        for (size_t i = 0; i < keys.size(); i++) {
+            if (!get_child(state->node_pos, offset,
+                    keys[i], begins[i], text_dict)) {
+                continue;
+            }
+
+            //CalcFail(offset ^ keys[i], state->node_pos, keys[i]);
+
+            queue.push(std::make_shared<SearchState>(
+                        begins[i], ends[i], state->depth + 1,
+                        offset ^ keys[i]
+                        ));
+        }
+    }
+}
+
+template <class Node>
+std::shared_ptr<std::vector<Node>> TrieBuilder<Node>::Build(TextDict& text_dict) {
+    using namespace std::placeholders;
+
+    DFS(text_dict, 
+            std::bind(&TrieBuilder<Node>::trie_get_offset, this, _1, _2),
+            std::bind(&TrieBuilder<Node>::trie_get_child, this, _1, _2, _3, _4, _5)
+            );
+    Shrink();
+    return trie_;
+
+    std::vector<size_t> begins;
+    std::vector<size_t> ends;
+    std::vector<unsigned char> keys;
+
+    //std::queue<std::shared_ptr<SearchState>> queue;
+    std::stack<std::shared_ptr<SearchState>> queue;
+    std::vector<bool> node_used;
+
+    queue.push(std::make_shared<SearchState>(
+                0, text_dict.size(), 0, ROOT_INDEX
+                ));
+
+    
+    /// 用队列实现搜索
+    size_t step = 0;
+    while (queue.size()) {
+        /// 得到队列第一个元素
+        //auto state = queue.front();
+        auto state = queue.top();
+        queue.pop();
+
+        /// 得到当前节点的所有儿子
+        text_dict.FindChildren(
+                state->begin, 
+                state->end, state->depth,
+                begins, ends, keys);
+
+        if ((step++) % 100 == 0) {
+            printf("%lu\t%lu\t\n", state->depth, state->begin);
+        }
 
         /// 分配TRIE树空间，填充内容
         unsigned int offset = free_link_.FindValid(state->node_pos, keys);
