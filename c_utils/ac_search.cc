@@ -26,6 +26,7 @@ int main(int argc, const char** argv) {
             unsigned char c = line[i];
             pos = ta.search_next(pos, c);
             ta.get_matches(pos, matches);
+            //printf(" %lu", matches.size());
             for (size_t j = 0; j < matches.size(); j++) {
                 cout<<" "<<line.substr(i + 1 - matches[j], matches[j]);
             }
