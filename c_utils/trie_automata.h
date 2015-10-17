@@ -3,6 +3,7 @@
 #include <string>
 #include <memory>
 #include <queue>
+#include <set>
 #include <stack>
 #include <functional>
 /**
@@ -337,9 +338,15 @@ public:
             unsigned int test_id = head_;
             if (!IsFull()) do {
                 unsigned int offset = test_id ^ keys[0];
-                if (IsValid(id, offset, keys)) {
+                //if (offset_set_.find(offset)!=offset_set_.end()) {
+                //    fprintf(stdout, "[Conflict]\n");
+                //}
+                //if ((offset_set_.find(offset)==offset_set_.end()) 
+                if (true
+                        && (IsValid(id, offset, keys))) {
                     //printf("free find %lu %lu\n", head_, offset);
                     SetUsed(id, offset, keys);
+                    offset_set_.insert(offset);
                     return offset;
                 }
                 test_id = free_info_[test_id].next;
@@ -416,6 +423,7 @@ private:
 
     unsigned int head_;
     std::vector<FreeInfo> free_info_;
+    std::set<unsigned int> offset_set_;
 };
 
 template <class Node>
@@ -461,6 +469,7 @@ private:
     }
 
     unsigned int ACRead(unsigned int index, unsigned char label) {
+        unsigned int next_index = 0;
         while (true) {
             auto ch = index ^ node(index).offset() ^ label;
             if (node(ch).label() == label) {
@@ -469,9 +478,14 @@ private:
             if (index == ROOT_INDEX) {
                 return ROOT_INDEX;
             }
-            printf("index fail %lu, %lu\n", index, node(index).fail());
+            //printf("index fail %lu, %lu\n", index, node(index).fail());
             fflush(stdout);
-            index = node(index).fail();
+            next_index = node(index).fail();
+            if (next_index == index) {
+                fprintf(stdout, "[FAIL]\n");
+                return ROOT_INDEX;
+            }
+            index = next_index;
         }
     }
 
@@ -622,8 +636,8 @@ void TrieBuilder<ACNode>::CalcFail(unsigned int this_node,
         return;
     }
     auto fail = ACRead(node(parent).fail(), label);
-    printf("%u(par: %u)'s fail is %u for label %lu %s\n", 
-            this_node, parent, fail, label, (_text_dict->key_at(begin)));
+    //printf("%u(par: %u)'s fail is %u for label %lu %s\n", 
+    //        this_node, parent, fail, label, (_text_dict->key_at(begin)));
     node(this_node).set_fail(fail);
 }
 
