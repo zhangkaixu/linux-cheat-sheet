@@ -90,6 +90,9 @@ public:
         return keys_.size();
     }
 
+    const char* key_at(size_t idx) const {
+        return keys_[idx].c_str();
+    }
     unsigned char key_at(size_t idx, size_t i) const {
         return keys_[idx][i];
     }
@@ -426,7 +429,7 @@ public:
     std::shared_ptr<std::vector<Node>> Build(TextDict& text_dict);
     std::shared_ptr<std::vector<Node>> nodes();
     void CalcFail(unsigned int this_node, 
-        unsigned int parents_fail, unsigned char label); 
+        unsigned int parents_fail, unsigned char label, size_t begin); 
 
 private:
     Node& node(unsigned int index) {
@@ -466,6 +469,8 @@ private:
             if (index == ROOT_INDEX) {
                 return ROOT_INDEX;
             }
+            printf("index fail %lu, %lu\n", index, node(index).fail());
+            fflush(stdout);
             index = node(index).fail();
         }
     }
@@ -497,7 +502,7 @@ private:
         if (label == '\0') {
             return false;
         }
-        CalcFail(offset ^ label, node_pos, label);
+        CalcFail(offset ^ label, node_pos, label, begin);
         return true;
     }
 
@@ -515,7 +520,7 @@ private:
 
 
     
-
+    TextDict* _text_dict;
     std::shared_ptr<std::vector<Node>> trie_;
     FreeLink free_link_;
 
@@ -534,6 +539,7 @@ void TrieBuilder<Node>::DFS(TextDict& text_dict,
        std::function<unsigned int(unsigned int, std::vector<unsigned char>&)> get_offset,
        std::function<bool(unsigned int, unsigned int, unsigned char, size_t, TextDict&)> get_child
         ) {
+    _text_dict = &text_dict;
     std::vector<size_t> begins;
     std::vector<size_t> ends;
     std::vector<unsigned char> keys;
@@ -606,17 +612,18 @@ std::shared_ptr<std::vector<Node>> TrieBuilder<Node>::Build(TextDict& text_dict)
 
 template <>
 void TrieBuilder<TrieNode>::CalcFail(unsigned int this_node, 
-        unsigned int parent, unsigned char label) {
+        unsigned int parent, unsigned char label, size_t begin) {
 }
 template <>
 void TrieBuilder<ACNode>::CalcFail(unsigned int this_node, 
-        unsigned int parent, unsigned char label) {
+        unsigned int parent, unsigned char label, size_t begin) {
     if (parent == ROOT_INDEX) {
         node(this_node).set_fail(ROOT_INDEX);
         return;
     }
     auto fail = ACRead(node(parent).fail(), label);
-    //printf("%u(par: %u)'s fail is %u for label %lu\n", this_node, parent, fail, label);
+    printf("%u(par: %u)'s fail is %u for label %lu %s\n", 
+            this_node, parent, fail, label, (_text_dict->key_at(begin)));
     node(this_node).set_fail(fail);
 }
 
