@@ -342,7 +342,7 @@ public:
                 //    fprintf(stdout, "[Conflict]\n");
                 //}
                 //if ((offset_set_.find(offset)==offset_set_.end()) 
-                if (true
+                if ((offset_set_.find(offset)==offset_set_.end())
                         && (IsValid(id, offset, keys))) {
                     //printf("free find %lu %lu\n", head_, offset);
                     SetUsed(id, offset, keys);
