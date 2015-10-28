@@ -150,7 +150,7 @@ public :
     /** 返回对应的节点的8位编码
      * */
     unsigned int label() const {
-        return trie_info_ & 0xC00000FF;
+        return trie_info_ & 0x800000FF;
     }
     /** 返回用于生成新base的offset
      * */
