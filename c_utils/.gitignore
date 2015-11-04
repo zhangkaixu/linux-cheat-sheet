@@ -5,6 +5,7 @@ trie_match
 ac_build
 ac_search
 hash_dispatch
+phrase_guess
 
 find_overlapping
 test*
