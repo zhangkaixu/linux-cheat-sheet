@@ -30,7 +30,7 @@ class CandFinder {
 public:
 
     CandFinder() {
-        _add_to_set(_dels, string(" ，。、！？：；“”《》‘’…"));
+        _add_to_set(_dels, string(" ,!?:;\"'，。、！？：；“”《》‘’…"));
 
         _non_word_chars.insert(_dels.begin(), _dels.end());
         //_add_to_set(_non_word_chars, string("0123456789,"));
@@ -95,6 +95,7 @@ public:
                 lefts.push_back(left);
                 rights.push_back(right);
             }
+            if (lefts.size() > 1) break;
 
         }
 
@@ -185,9 +186,10 @@ int main(int argc, const char *argv[])
     for (string line; getline(cin, line); ) {
         utf8::align_to_uint(line, tokens, offs); 
         if (tokens.size() > 1000) {
+            //printf("too long\n");
             tokens.resize(1000);
         }
-        cout<<line<<"\n";
+        //cout<<line<<"\n";
         finder.find_repetition(line, tokens, offs);
         n++;
         if (n % 10000 == 0) {

@@ -15,6 +15,9 @@ class Counter {
     Dict _map;
 
 public:
+    void clear() {
+        _map.clear();
+    }
     void update(const T& key, size_t n = 1) {
         auto iter = _map.find(key);
         if (iter == _map.end()) {
