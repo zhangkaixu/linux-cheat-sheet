@@ -25,7 +25,7 @@ int main(int argc, const char** argv) {
 
     /// build trie
     std::shared_ptr<std::vector<ACNode>> trie = TrieBuilder<ACNode>().Build(text_dict);
-    FILE* pf = fopen("test.trie", "wb");
+    FILE* pf = fopen(argv[1], "wb");
     save_trie(*trie, pf);
     return 0;
 }

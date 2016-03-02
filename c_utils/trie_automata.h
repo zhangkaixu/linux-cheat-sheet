@@ -6,6 +6,7 @@
 #include <set>
 #include <stack>
 #include <functional>
+#include <algorithm>
 /**
  * interface
  * */
@@ -64,6 +65,18 @@ public:
     }
 };
 
+struct Sortable 
+{
+    std::string key;
+    int value;
+    Sortable(std::string k, int v):
+        key(k), value(v){};
+};
+
+bool Compare_Sortable(const Sortable& a, const Sortable& b)
+{
+    return a.key < b.key;
+};
 class TextDict {
 public:
     TextDict() {
@@ -81,6 +94,12 @@ public:
     }
 
     bool Check() const {
+        for (int i = 1; i < keys_.size(); i++) {
+            if (keys_[i - 1] >= keys_[i]) {
+                return false;
+            }
+        }
+        return true;
     }
 
     void FindChildren(size_t begin, size_t end, size_t depth,
@@ -101,9 +120,25 @@ public:
         return values_[idx];
     }
 
+    void Sort()
+    {
+        std::vector<Sortable> sl;
+        for (size_t i = 0; i < keys_.size(); i++) {
+            sl.push_back(Sortable(keys_[i], values_[i]));
+        }
+        std::stable_sort(sl.begin(), sl.end(), Compare_Sortable);
+        keys_.clear();
+        values_.clear();
+        for (size_t i = 0; i < sl.size(); i++) {
+            keys_.push_back(sl[i].key);
+            values_.push_back(sl[i].value);
+        }
+    }
+
 private:
     std::vector<std::string> keys_;
     std::vector<int> values_;
+
 };
 
 
@@ -609,6 +644,12 @@ void TrieBuilder<Node>::DFS(TextDict& text_dict,
 template <class Node>
 std::shared_ptr<std::vector<Node>> TrieBuilder<Node>::Build(TextDict& text_dict) {
     using namespace std::placeholders;
+
+    text_dict.Sort();
+    if (!text_dict.Check()) {
+        fprintf(stderr, "ERROR, dict with equal keys\n");
+        return trie_;
+    }
 
     DFS<DFS_SEARCH>(text_dict, 
             std::bind(&TrieBuilder<Node>::trie_get_offset, this, _1, _2),
