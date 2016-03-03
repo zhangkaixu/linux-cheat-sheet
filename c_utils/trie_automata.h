@@ -82,6 +82,11 @@ public:
     TextDict() {
     }
 
+    void AddKeyValue(const std::string& key, const int value) 
+    {
+        keys_.push_back(key);
+        values_.push_back(value);
+    }
     void AddLine(const std::string& line) {
         size_t table_pos = line.find('\t');
         if (table_pos != std::string::npos) {
@@ -618,7 +623,7 @@ void TrieBuilder<Node>::DFS(TextDict& text_dict,
                 begins, ends, keys);
 
         if ((step++) % 100000 == 0) {
-            printf("%lu\t%lu\t\n", state->depth, state->begin);
+            //printf("%lu\t%lu\t\n", state->depth, state->begin);
         }
 
         /// 分配TRIE树空间，填充内容

@@ -4,6 +4,7 @@ trie_build
 trie_match
 ac_build
 ac_search
+ac_counter
 hash_dispatch
 phrase_guess
 
