@@ -278,6 +278,9 @@ public:
         auto cur = index;
         while (true) {
             auto next = cur ^ array_[cur].offset() ^ label;
+            if (next >= size_) {
+                printf("size!!!\n");
+            }
             if (array_[next].label() == label) {
                 return next;
             }
@@ -502,6 +505,13 @@ private:
             }
             end--;
         }
+        if (end % 256) {
+            end = ((end >> 8) + 1) << 8;
+        } else {
+        }
+        while (end > trie_->size()) {
+            Expand();
+        }
         for (size_t i = 0; i < end; i++) {
             new_trie->push_back((*trie_)[i]);
         }
@@ -623,7 +633,7 @@ void TrieBuilder<Node>::DFS(TextDict& text_dict,
                 begins, ends, keys);
 
         if ((step++) % 100000 == 0) {
-            //printf("%lu\t%lu\t\n", state->depth, state->begin);
+            fprintf(stderr, "%lu\t%lu\t\n", state->depth, state->begin);
         }
 
         /// 分配TRIE树空间，填充内容
@@ -655,12 +665,14 @@ std::shared_ptr<std::vector<Node>> TrieBuilder<Node>::Build(TextDict& text_dict)
         fprintf(stderr, "ERROR, dict with equal keys\n");
         return trie_;
     }
+    fprintf(stderr, "building trie\n");
 
     DFS<DFS_SEARCH>(text_dict, 
             std::bind(&TrieBuilder<Node>::trie_get_offset, this, _1, _2),
             std::bind(&TrieBuilder<Node>::trie_get_child, this, _1, _2, _3, _4, _5)
             );
 
+    fprintf(stderr, "calc fail\n");
     DFS<BFS_SEARCH>(text_dict, 
             std::bind(&TrieBuilder<Node>::ac_get_offset, this, _1, _2),
             std::bind(&TrieBuilder<Node>::ac_get_child, this, _1, _2, _3, _4, _5)

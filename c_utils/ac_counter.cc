@@ -37,20 +37,28 @@ int main(int argc, const char** argv) {
 
     vector<int> matches;
     for (string line; getline(cin, line); ) {
+
+        //printf("%s\n", line.c_str());
         unsigned int pos = 0;
         for (size_t i = 0; i < line.size(); i++) {
             unsigned char c = line[i];
+            //printf("c : %lu\n", (unsigned char)c);
             pos = ta.search_next(pos, c);
+            //printf("%lu\n", pos);
             ta.get_matches(pos, matches);
+            //printf("%d\n", matches.size());
             for (size_t j = 0; j < matches.size(); j++) {
                 counts[matches[j]]++;
             }
         }
+        //printf("line end\n");
     }
 
+    fprintf(stderr, "dump count\n");
     for (size_t i = 0; i < keys.size(); i++) {
         printf("%s\t%lu\n", keys[i].c_str(), counts[i]);
     }
+    fprintf(stderr, "finished\n");
 
     return 0;
 }
