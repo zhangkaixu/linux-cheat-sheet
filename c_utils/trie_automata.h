@@ -364,7 +364,7 @@ public:
         }
     }
 
-    void report() {
+    void _report() {
         size_t free = 0;
         for (size_t i = 0; i< free_info_.size(); i++) {
             printf("freelist %lu %u\n", i, IsFree(i));
@@ -378,7 +378,7 @@ public:
     unsigned int FindValid(unsigned int id,
             std::vector<unsigned char>& keys) {
         while (true) {
-            unsigned int test_id = head_;
+            unsigned int test_id = head_;  /// test_id is the id to be test
             if (!IsFull()) do {
                 unsigned int offset = test_id ^ keys[0];
                 //if (offset_set_.find(offset)!=offset_set_.end()) {
@@ -466,6 +466,8 @@ private:
 
     unsigned int head_;
     std::vector<FreeInfo> free_info_;
+
+    /// the offset_set is used to ensure no two offsets are the same
     std::set<unsigned int> offset_set_;
 };
 
