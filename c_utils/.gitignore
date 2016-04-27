@@ -7,6 +7,7 @@ ac_search
 ac_counter
 hash_dispatch
 phrase_guess
+key_index
 
 find_overlapping
 test*

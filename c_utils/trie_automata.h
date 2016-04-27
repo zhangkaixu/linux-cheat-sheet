@@ -19,6 +19,7 @@ const unsigned int UPPER_MASK = 0xFF << 21;
 
 
 const size_t ROOT_INDEX = 0;
+const double MAX_ALPHA = 0.9;
 
 enum search_type_t{
     DFS_SEARCH,
@@ -377,6 +378,7 @@ public:
 
     unsigned int FindValid(unsigned int id,
             std::vector<unsigned char>& keys) {
+        //unsigned int old_head_;
         while (true) {
             unsigned int test_id = head_;  /// test_id is the id to be test
             if (!IsFull()) do {
@@ -433,6 +435,30 @@ private:
             std::vector<unsigned char>& keys) {
         for (auto key : keys) {
             SetUsed(key ^ offset);
+        }
+
+        /// 装载率已经很高的情况下，会导致搜索合法节点过慢
+        /// 以下逻辑使得在装载率足够高的情况下跳过部分节点
+
+        unsigned int h = head_;
+        int n_free = 1;
+        while (h < offset and h < free_info_.size()) {
+            if (h > free_info_[h].next) break;
+            h = free_info_[h].next;
+            n_free++;
+        }
+        int n_node = h - head_ + 1;
+        
+        double free_rate = n_free * 1.0 / n_node;
+
+        if (free_rate < 1 - MAX_ALPHA) {
+            h = head_;
+            while (h < offset and h < free_info_.size()) {
+                if (h > free_info_[h].next) break;
+                unsigned int old_h = h;
+                h = free_info_[h].next;
+                SetUsed(old_h);
+            }
         }
     }
     void Expand() {
