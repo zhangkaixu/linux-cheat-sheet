@@ -19,4 +19,6 @@ link_file .tmux.conf
 link_file .bash_profile
 link_file .screenrc
 link_file .zshrc
+link_file .tmux-powerline
+link_file .oh-my-zsh
 echo "配置完成"
