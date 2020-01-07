@@ -11,7 +11,7 @@ export TERM="xterm-256color"
 # to know which specific one was loaded, run: echo $RANDOM_THEME
 # See https://github.com/robbyrussell/oh-my-zsh/wiki/Themes
 ZSH_THEME="robbyrussell"
-ZSH_THEME="agnoster"
+#ZSH_THEME="agnoster"
 #ZSH_THEME="powerlevel9k/powerlevel9k"
 
 POWERLEVEL9K_HOME_ICON=''
@@ -108,3 +108,8 @@ source $ZSH/oh-my-zsh.sh
 # Example aliases
 # alias zshconfig="mate ~/.zshrc"
 # alias ohmyzsh="mate ~/.oh-my-zsh"
+
+INNER_IP=$(ifconfig eth1 | awk 'NR==2' | grep '[\.0-9]\+' -o |head -n1| sed 's/://')
+RPROMPT=$(echo "$RED%D %T$FINISH")
+PROMPT=$(echo "$CYAN%n@$INNER_IP$WHITE:$GREEN%/
+^_^$FINISH ")
