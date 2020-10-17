@@ -109,7 +109,9 @@ source $ZSH/oh-my-zsh.sh
 # alias zshconfig="mate ~/.zshrc"
 # alias ohmyzsh="mate ~/.oh-my-zsh"
 
-INNER_IP=$(ifconfig eth1 | awk 'NR==2' | grep '[\.0-9]\+' -o |head -n1| sed 's/://')
+
+#INNER_IP=$(ifconfig eth1 | awk 'NR==2' | grep '[\.0-9]\+' -o |head -n1| sed 's/://')
+INNER_IP=''
 RPROMPT=$(echo "$RED%D %T$FINISH")
 PROMPT=$(echo "$CYAN%n@$INNER_IP$WHITE:$GREEN%/
 ^_^$FINISH ")
